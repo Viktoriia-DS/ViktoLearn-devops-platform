@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+.env.*
+
+# IDE/editor
+.vscode/
+.idea/
+.DS_Store
+
+# Test / coverage
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+# Docker
+*.pid
+
+# Kubernetes temporary files
+*.tmp
