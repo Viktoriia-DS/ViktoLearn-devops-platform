@@ -1,0 +1,30 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Environment variables
+.env
+.env.*
+
+# macOS
+.DS_Store
+
+# IDE 
+.vscode/
+.idea/
+
+# Tests (not needed in runtime image)
+tests/
+
+# Documentation
+docs/
+
+# Logs
+*.log

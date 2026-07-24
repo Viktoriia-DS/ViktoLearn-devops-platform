@@ -6,6 +6,8 @@ from app.routes.enrollments import router as enrollments_router
 from app.routes.progress import router as progress_router
 from app.routes.admin import router as admin_router
 from app.routes.metrics import router as metrics_router
+from app.routes import cache
+
 
 app = FastAPI(
     title="ViktoLearn API",
@@ -20,7 +22,7 @@ app.include_router(enrollments_router)
 app.include_router(progress_router)
 app.include_router(admin_router)
 app.include_router(metrics_router)
-
+app.include_router(cache.router)
 
 @app.get("/")
 def root():
