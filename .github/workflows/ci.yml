@@ -34,7 +34,7 @@ jobs:
         run: black --check .
 
       - name: Run tests
-        run: pytest
+        run: pytest tests
 
       - name: Build Docker image
         run: docker build -t viktolearn:latest .
