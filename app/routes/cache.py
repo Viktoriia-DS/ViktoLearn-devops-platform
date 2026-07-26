@@ -1,11 +1,12 @@
 from fastapi import APIRouter
-from app.redis_client import client
 
+from app.redis_client import client
 
 router = APIRouter(
     prefix="/cache",
     tags=["Cache"],
 )
+
 
 @router.get("/")
 def cache_health():
@@ -13,6 +14,7 @@ def cache_health():
         "status": "healthy",
         "redis": client.ping(),
     }
+
 
 @router.get("/demo")
 def cache_demo():

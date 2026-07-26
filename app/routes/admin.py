@@ -8,16 +8,14 @@ from app.routes.students import students
 router = APIRouter()
 
 router.get("/admin/dashboard")
+
+
 def admin_dashboard():
     total_courses = len(courses)
     total_students = len(students)
     total_enrollments = len(enrollments)
     completed_courses = len(
-        [
-            record
-            for record in progress_records
-            if record["status"] == "completed"
-        ]
+        [record for record in progress_records if record["status"] == "completed"]
     )
 
     return {

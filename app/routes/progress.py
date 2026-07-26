@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 router = APIRouter()
 progress_records = [
     {
@@ -21,8 +22,9 @@ progress_records = [
         "course_id": 3,
         "progress_percent": 100,
         "status": "completed",
-    }
+    },
 ]
+
 
 @router.get("/progress")
 def get_progress():

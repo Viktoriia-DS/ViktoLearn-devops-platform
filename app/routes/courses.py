@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 router = APIRouter()
 courses = [
     {
@@ -6,17 +7,10 @@ courses = [
         "title": "Introduction to DevOps",
         "category": "DevOps",
     },
-    {
-        "id": 2,
-        "title": "Docker Fundamentals",
-        "category": "Containers"
-    },
-    {
-        "id": 3,
-        "title": "Kubernetes Basics",
-        "category": "Kubernetes"
-    }
+    {"id": 2, "title": "Docker Fundamentals", "category": "Containers"},
+    {"id": 3, "title": "Kubernetes Basics", "category": "Kubernetes"},
 ]
+
 
 @router.get("/courses")
 def get_courses():

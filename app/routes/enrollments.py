@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 router = APIRouter()
 
 enrollments = [
@@ -16,8 +17,9 @@ enrollments = [
         "id": 3,
         "student_id": 3,
         "course_id": 3,
-    }
+    },
 ]
+
 
 @router.get("/enrollments")
 def get_enrollments():
