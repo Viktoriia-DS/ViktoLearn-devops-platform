@@ -31,3 +31,6 @@ htmlcov/
 
 # Kubernetes temporary files
 *.tmp
+
+# Packaged Helm charts
+*.tgz

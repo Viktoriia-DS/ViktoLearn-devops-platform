@@ -1,0 +1,6 @@
+apiVersion: v2
+name: viktolearn
+description: A Helm chart for the ViktoLearn FastAPI platform
+type: application
+version: 0.2.0
+appVersion: "1.0.0"

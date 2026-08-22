@@ -1,0 +1,23 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+
+metadata:
+  name: viktolearn-route
+  namespace: {{ .Values.namespace.name }}
+
+spec:
+  parentRefs:
+    - name: viktolearn-gateway
+
+  hostnames:
+    - viktolearn.local
+
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+      backendRefs:
+        - name: api
+          port: {{ .Values.api.service.port }}

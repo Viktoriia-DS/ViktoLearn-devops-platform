@@ -1,0 +1,88 @@
+namespace:
+  create: true
+  name: viktolearn-helm
+
+api:
+  replicaCount: 1
+
+  image:
+    repository: viktolearn
+    tag: "latest"
+    pullPolicy: Never
+
+  service:
+    type: ClusterIP
+    port: 8000
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+postgres:
+  replicaCount: 1
+
+  image:
+    repository: postgres
+    tag: "17"
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 5432
+
+  resources:  
+    requests: 
+      cpu: "100m"
+      memory: "128Mi"
+    limits: 
+      cpu: "500m"
+      memory: "512Mi"
+
+  database: viktolearn
+  user: viktolearn
+  password: viktolearn
+
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClass: standard
+
+redis:
+  replicaCount: 1
+
+  image:
+    repository: redis
+    tag: "8-alpine"
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 6379
+
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+    limits:
+      cpu: "250m"
+      memory: "256Mi"
+
+probes:
+  readiness:
+    path: /ready
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  
+  liveness:
+    path: /health
+    initialDelaySeconds: 15
+    periodSeconds: 20
+
+  startup:
+    path: /health
+    failureThreshold: 30
+    periodSeconds: 5

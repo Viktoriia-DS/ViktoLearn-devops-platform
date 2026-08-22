@@ -1,0 +1,12 @@
+namespace:  
+  create: true
+  name: viktolearn-prod
+
+api:
+  replicaCount: 3
+
+postgres:
+  replicaCount: 1
+
+redis: 
+  replicaCount: 1

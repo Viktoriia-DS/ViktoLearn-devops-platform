@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: viktolearn
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec: 
+      containers: 
+        - name: api
+          image: viktolearn:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+          env: 
+            - name: DB_HOST
+              value: postgres
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: viktolearn
+            - name: DB_USER
+              value: viktolearn
+            - name: DB_PASSWORD
+              value: viktolearn
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
