@@ -3,7 +3,7 @@ namespace:
   name: viktolearn-helm
 
 api:
-  replicaCount: 1
+  replicaCount: 2
 
   image:
     repository: viktolearn
