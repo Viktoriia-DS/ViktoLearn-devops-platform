@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+
+metadata:
+  name: viktolearn-api
+  namespace: monitoring
+
+spec:
+  selector:
+    matchLabels:
+      app: api
+
+  namespaceSelector:
+    matchNames:
+      - viktolearn-helm
+
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
