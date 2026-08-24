@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from app.monitoring import PrometheusMiddleware
 from app.routes import cache
 from app.routes.admin import router as admin_router
 from app.routes.courses import router as courses_router
@@ -14,6 +15,8 @@ app = FastAPI(
     description="Learning platform API for the ViktoLearn DevOps capstone project",
     version="0.1.0",
 )
+
+app.add_middleware(PrometheusMiddleware)
 
 app.include_router(health_router)
 app.include_router(courses_router)
