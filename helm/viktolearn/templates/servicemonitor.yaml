@@ -4,6 +4,8 @@ kind: ServiceMonitor
 metadata:
   name: viktolearn-api
   namespace: monitoring
+  labels:
+    release: monitoring
 
 spec:
   selector:
