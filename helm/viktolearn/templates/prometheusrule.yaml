@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+
+metadata:
+  name: viktolearn-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring
+
+spec:
+  groups:
+    - name: viktolearn.rules
+      rules:
+        - alert: ViktoLearnAPIDown
+          expr: up{namespace="viktolearn-helm",service="api"} == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "ViktoLearn API is down"
+            description: "Prometheus has been unable to scrape the ViktoLearn API for more than 1 minute."
