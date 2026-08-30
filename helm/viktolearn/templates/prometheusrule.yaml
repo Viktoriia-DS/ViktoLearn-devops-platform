@@ -12,10 +12,18 @@ spec:
     - name: viktolearn.rules
       rules:
         - alert: ViktoLearnAPIDown
-          expr: absent(up{namespace="viktolearn-helm",service="api"} == 1)         
+          expr: up{namespace="viktolearn-helm",service="api"} == 0
           for: 1m
           labels:
             severity: critical
           annotations:
             summary: "ViktoLearn API is down"
             description: "Prometheus has been unable to scrape the ViktoLearn API for more than 1 minute."
+        - alert: ViktoLearnHighErrorRate
+          expr: sum(rate(viktolearn_http_errors_total[5m])) > 0.1
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "ViktoLearn API has a high error rate"
+            description: "The ViktoLearn API error rate has been above 0.1 errors per second for more than 2 minutes."
