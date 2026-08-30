@@ -12,7 +12,7 @@ spec:
     - name: viktolearn.rules
       rules:
         - alert: ViktoLearnAPIDown
-          expr: up{namespace="viktolearn-helm",service="api"} == 0
+          expr: absent(up{namespace="viktolearn-helm",service="api"} == 1)         
           for: 1m
           labels:
             severity: critical
