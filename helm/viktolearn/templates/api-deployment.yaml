@@ -18,8 +18,20 @@ spec:
         app: api
 
     spec:
+      securityContext:
+        runAsNonRoot: {{ .Values.api.podSecurityContext.runAsNonRoot }}
+        runAsUser: {{ .Values.api.podSecurityContext.runAsUser }}
+        runAsGroup: {{ .Values.api.podSecurityContext.runAsGroup }}
+        fsGroup: {{ .Values.api.podSecurityContext.fsGroup }}
+
       containers:
         - name: api
+
+          securityContext:
+            allowPrivilegeEscalation: {{ .Values.api.securityContext.allowPrivilegeEscalation }}
+            capabilities:
+              drop:
+                {{- toYaml .Values.api.securityContext.capabilities.drop | nindent 16 }}
 
           image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}
           imagePullPolicy: {{ .Values.api.image.pullPolicy }}
