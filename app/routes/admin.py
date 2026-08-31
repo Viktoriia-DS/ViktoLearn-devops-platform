@@ -7,9 +7,8 @@ from app.routes.students import students
 
 router = APIRouter()
 
-router.get("/admin/dashboard")
 
-
+@router.get("/admin/dashboard")
 def admin_dashboard():
     total_courses = len(courses)
     total_students = len(students)
