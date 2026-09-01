@@ -3,12 +3,12 @@ FROM python:3.13-slim AS builder
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY requirements-prod.txt .
 
 RUN pip install \
     --no-cache-dir \
     --prefix=/install \
-    -r requirements.txt
+    -r requirements-prod.txt
 
 
 # ---------- Runtime ----------
@@ -17,6 +17,9 @@ FROM python:3.13-slim AS runtime
 WORKDIR /app
 
 COPY --from=builder /install /usr/local
+
+# Remove package-management tooling from the runtime image
+RUN python -m pip uninstall --yes pip setuptools 2>/dev/null || true
 
 COPY app ./app
 
