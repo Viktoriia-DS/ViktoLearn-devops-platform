@@ -112,3 +112,6 @@ resourceQuota:
     pods: "10"
     persistentVolumeClaims: "5"
     requestsStorage: "10Gi"
+
+networkPolicy:
+  enabled: true
