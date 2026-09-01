@@ -33,9 +33,11 @@ api:
     requests:
       cpu: "100m"
       memory: "128Mi"
+      ephemeralStorage: "100Mi"
     limits:
       cpu: "500m"
       memory: "512Mi"
+      ephemeralStorage: "500Mi"
 
 postgres:
   replicaCount: 1
@@ -53,9 +55,11 @@ postgres:
     requests:
       cpu: "100m"
       memory: "128Mi"
+      ephemeralStorage: "100Mi"
     limits:
       cpu: "500m"
       memory: "512Mi"
+      ephemeralStorage: "500Mi"
 
   database: viktolearn
   user: viktolearn
@@ -95,9 +99,11 @@ redis:
     requests:
       cpu: "50m"
       memory: "64Mi"
+      ephemeralStorage: "50Mi"
     limits:
       cpu: "250m"
       memory: "256Mi"
+      ephemeralStorage: "250Mi"
 
   podSecurityContext:
     runAsNonRoot: true

@@ -44,9 +44,21 @@ spec:
             requests:
               cpu: {{ .Values.redis.resources.requests.cpu | quote }}
               memory: {{ .Values.redis.resources.requests.memory | quote }}
+              ephemeral-storage: {{ .Values.redis.resources.requests.ephemeralStorage | quote }}
             limits:
               cpu: {{ .Values.redis.resources.limits.cpu | quote }}
               memory: {{ .Values.redis.resources.limits.memory | quote }}
+              ephemeral-storage: {{ .Values.redis.resources.limits.ephemeralStorage | quote }}
+
+          readinessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
 
           volumeMounts:
             - name: redis-data

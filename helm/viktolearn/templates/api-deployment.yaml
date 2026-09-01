@@ -46,9 +46,11 @@ spec:
             requests:
               cpu: {{ .Values.api.resources.requests.cpu | quote }}
               memory: {{ .Values.api.resources.requests.memory | quote }}
+              ephemeral-storage: {{ .Values.api.resources.requests.ephemeralStorage | quote }}
             limits: 
               cpu: {{ .Values.api.resources.limits.cpu | quote }}
               memory: {{ .Values.api.resources.limits.memory | quote }}
+              ephemeral-storage: {{ .Values.api.resources.limits.ephemeralStorage | quote }}
 
           readinessProbe:
             httpGet:

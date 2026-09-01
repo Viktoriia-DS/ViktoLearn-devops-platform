@@ -44,9 +44,22 @@ spec:
             requests:
               cpu: {{ .Values.postgres.resources.requests.cpu | quote }}
               memory: {{ .Values.postgres.resources.requests.memory | quote }}
+              ephemeral-storage: {{ .Values.postgres.resources.requests.ephemeralStorage | quote }}
             limits:
               cpu: {{ .Values.postgres.resources.limits.cpu | quote }}
               memory: {{ .Values.postgres.resources.limits.memory | quote }}
+              ephemeral-storage: {{ .Values.postgres.resources.limits.ephemeralStorage | quote }}
+
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
 
           volumeMounts:
             - name: postgres-storage
