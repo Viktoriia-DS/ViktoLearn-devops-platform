@@ -63,3 +63,21 @@ jobs:
         uses: stackrox/kube-linter-action@v1.0.4
         with:
           directory: helm/viktolearn
+
+      - name: Install kube-score
+        run: |
+          curl -L \
+            "https://github.com/zegl/kube-score/releases/download/v1.20.0/kube-score_1.20.0_linux_amd64.tar.gz" \
+            -o /tmp/kube-score.tar.gz
+          tar -xzf /tmp/kube-score.tar.gz -C /tmp
+          sudo install /tmp/kube-score /usr/local/bin/kube-score
+          kube-score version
+
+      - name: Run kube-score
+        run: |
+          helm template viktolearn helm/viktolearn > /tmp/viktolearn-kubescore.yaml
+          kube-score score /tmp/viktolearn-kubescore.yaml \
+            --ignore-test container-security-context-user-group-id \
+            --ignore-test container-image-pull-policy \
+            --ignore-test deployment-replicas \
+            --ignore-test pod-networkpolicy
