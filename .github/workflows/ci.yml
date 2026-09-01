@@ -1,6 +1,6 @@
 name: CI
 
-on: 
+on:
   push:
     branches:
       - main
@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -52,3 +52,17 @@ jobs:
             --ignore-unfixed \
             --exit-code 1 \
             viktolearn:latest
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Install kube-linter
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/stackrox/kube-linter/main/scripts/install.sh \
+            | sudo sh -s -- -b /usr/local/bin
+
+      - name: Lint Kubernetes manifests
+        run: |
+          helm lint helm/viktolearn
+          helm template viktolearn helm/viktolearn > /tmp/viktolearn.yaml
+          kube-linter lint /tmp/viktolearn.yaml
