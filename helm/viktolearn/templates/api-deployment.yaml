@@ -23,6 +23,8 @@ spec:
         runAsUser: {{ .Values.api.podSecurityContext.runAsUser }}
         runAsGroup: {{ .Values.api.podSecurityContext.runAsGroup }}
         fsGroup: {{ .Values.api.podSecurityContext.fsGroup }}
+        seccompProfile:
+          type: {{ .Values.api.podSecurityContext.seccompProfile.type }}
 
       containers:
         - name: api
