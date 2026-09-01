@@ -58,8 +58,11 @@ jobs:
 
       - name: Install kube-linter
         run: |
+          mkdir -p "$HOME/.local/bin"
           curl -sSfL https://raw.githubusercontent.com/stackrox/kube-linter/main/scripts/install.sh \
-            | sudo sh -s -- -b /usr/local/bin
+            | sh -s -- -b "$HOME/.local/bin"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          "$HOME/.local/bin/kube-linter" version
 
       - name: Lint Kubernetes manifests
         run: |
