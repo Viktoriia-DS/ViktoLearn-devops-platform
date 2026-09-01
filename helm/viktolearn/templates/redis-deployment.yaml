@@ -18,8 +18,21 @@ spec:
         app: redis
 
     spec:
+      securityContext:
+        runAsNonRoot: {{ .Values.redis.podSecurityContext.runAsNonRoot }}
+        runAsUser: {{ .Values.redis.podSecurityContext.runAsUser }}
+        runAsGroup: {{ .Values.redis.podSecurityContext.runAsGroup }}
+        fsGroup: {{ .Values.redis.podSecurityContext.fsGroup }}
+
       containers:
         - name: redis
+
+          securityContext:
+            allowPrivilegeEscalation: {{ .Values.redis.securityContext.allowPrivilegeEscalation }}
+            readOnlyRootFilesystem: {{ .Values.redis.securityContext.readOnlyRootFilesystem }}
+            capabilities:
+              drop:
+                {{- toYaml .Values.redis.securityContext.capabilities.drop | nindent 16 }}
 
           image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
           imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
@@ -34,3 +47,11 @@ spec:
             limits:
               cpu: {{ .Values.redis.resources.limits.cpu | quote }}
               memory: {{ .Values.redis.resources.limits.memory | quote }}
+
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+
+      volumes:
+        - name: redis-data
+          emptyDir: {}

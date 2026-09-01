@@ -18,15 +18,28 @@ spec:
         app: postgres
 
     spec:
+      securityContext:
+        runAsNonRoot: {{ .Values.postgres.podSecurityContext.runAsNonRoot }}
+        runAsUser: {{ .Values.postgres.podSecurityContext.runAsUser }}
+        runAsGroup: {{ .Values.postgres.podSecurityContext.runAsGroup }}
+        fsGroup: {{ .Values.postgres.podSecurityContext.fsGroup }}
+
       containers:
         - name: postgres
+
+          securityContext:
+            allowPrivilegeEscalation: {{ .Values.postgres.securityContext.allowPrivilegeEscalation }}
+            readOnlyRootFilesystem: {{ .Values.postgres.securityContext.readOnlyRootFilesystem }}
+            capabilities:
+              drop:
+                {{- toYaml .Values.postgres.securityContext.capabilities.drop | nindent 16 }}
 
           image: {{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}
           imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}
 
           ports:
             - containerPort: {{ .Values.postgres.service.port }}
-          
+
           resources:
             requests:
               cpu: {{ .Values.postgres.resources.requests.cpu | quote }}
@@ -39,21 +52,24 @@ spec:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
 
+            - name: postgres-run
+              mountPath: /var/run/postgresql
+
           env:
             - name: POSTGRES_DB
-              valueFrom: 
+              valueFrom:
                 configMapKeyRef:
                   name: viktolearn-config
                   key: DB_NAME
 
             - name: POSTGRES_USER
-              valueFrom: 
+              valueFrom:
                 secretKeyRef:
                   name: viktolearn-secret
                   key: DB_USER
 
             - name: POSTGRES_PASSWORD
-              valueFrom: 
+              valueFrom:
                 secretKeyRef:
                   name: viktolearn-secret
                   key: DB_PASSWORD
@@ -62,3 +78,6 @@ spec:
         - name: postgres-storage
           persistentVolumeClaim:
             claimName: postgres-pvc
+
+        - name: postgres-run
+          emptyDir: {}
