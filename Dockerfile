@@ -20,14 +20,15 @@ COPY --from=builder /install /usr/local
 
 COPY app ./app
 
-RUN groupadd --system viktolearn \
+RUN groupadd --system --gid 999 viktolearn \
     && useradd --system \
-       --gid viktolearn \
+       --uid 999 \
+       --gid 999 \
        --create-home \
        viktolearn \
-    && chown -R viktolearn:viktolearn /app
+    && chown -R 999:999 /app
 
-USER viktolearn
+USER 999:999
 
 EXPOSE 8000
 

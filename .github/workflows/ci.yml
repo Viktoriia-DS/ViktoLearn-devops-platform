@@ -36,5 +36,8 @@ jobs:
       - name: Run tests
         run: pytest tests
 
+      - name: Lint Dockerfile with Hadolint
+        run: docker run --rm -i hadolint/hadolint < Dockerfile
+
       - name: Build Docker image
         run: docker build -t viktolearn:latest .
