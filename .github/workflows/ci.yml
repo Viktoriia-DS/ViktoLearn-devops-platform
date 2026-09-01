@@ -10,7 +10,7 @@ on:
       - main
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 jobs:
@@ -111,3 +111,56 @@ jobs:
 
           docker push \
             ghcr.io/viktoriia-ds/viktolearn-devops-platform:latest
+
+      - name: Update Helm image tag
+        if: github.event_name == 'push'
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          import re
+
+          p = Path("helm/viktolearn/values.yaml")
+          s = p.read_text()
+          image_tag = os.environ["IMAGE_TAG"]
+
+          pattern = (
+              r'(repository:\s*'
+              r'ghcr\.io/viktoriia-ds/viktolearn-devops-platform\s*\n'
+              r'\s*tag:\s*)"[^"]+"'
+          )
+
+          updated, count = re.subn(
+              pattern,
+              rf'\1"{image_tag}"',
+              s,
+              count=1,
+          )
+
+          if count != 1:
+              raise SystemExit(
+                  "ERROR: Could not update the API GHCR image tag."
+              )
+
+          p.write_text(updated)
+          print(f"Helm image tag updated to {image_tag}")
+          PY
+
+      - name: Commit Helm image tag
+        if: github.event_name == 'push'
+        run: |
+          if git diff --quiet -- helm/viktolearn/values.yaml; then
+            echo "Helm image tag already points to ${{ github.sha }}"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add helm/viktolearn/values.yaml
+          git diff --cached --check
+
+          git commit -m "Deploy image ${{ github.sha }} [skip ci]"
+          git push
