@@ -29,6 +29,7 @@ spec:
 
           securityContext:
             allowPrivilegeEscalation: {{ .Values.api.securityContext.allowPrivilegeEscalation }}
+            readOnlyRootFilesystem: {{ .Values.api.securityContext.readOnlyRootFilesystem }}
             capabilities:
               drop:
                 {{- toYaml .Values.api.securityContext.capabilities.drop | nindent 16 }}
