@@ -6,9 +6,9 @@ api:
   replicaCount: 1
 
   image:
-    repository: viktolearn
-    tag: "0.1.0"
-    pullPolicy: Never
+    repository: ghcr.io/viktoriia-ds/viktolearn-devops-platform
+    tag: "latest"
+    pullPolicy: Always
 
   service:
     type: ClusterIP
