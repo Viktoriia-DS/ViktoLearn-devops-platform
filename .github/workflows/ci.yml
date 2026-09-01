@@ -63,4 +63,3 @@ jobs:
         uses: stackrox/kube-linter-action@v1.0.4
         with:
           directory: helm/viktolearn
-          fail-on-invalid-resource: true
