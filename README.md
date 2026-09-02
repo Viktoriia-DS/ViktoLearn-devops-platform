@@ -45,6 +45,22 @@ Kubernetes (Kind)
     +--> Loki / Grafana Alloy
 ```
 
+## Live Demo
+
+The ViktoLearn application is publicly deployed on Render:
+
+- **Frontend:** https://viktolearn-zeir.onrender.com
+- **API:** https://viktolearn.onrender.com
+- **API health:** https://viktolearn.onrender.com/health
+
+The public deployment uses a Render Static Site for the React frontend and a Render Web Service for the FastAPI backend.
+
+The full DevOps platform documented in this repository runs separately on a local Kubernetes (Kind) environment and demonstrates Helm-based deployment, Argo CD GitOps, Envoy Gateway routing, Prometheus/Grafana observability, Loki/Alloy centralized logging, and Kubernetes security controls.
+
+> **Note:** The public API runs on Render's free service tier and may require a short cold start after a period of inactivity.
+
+---
+
 ## Engineering Highlights
 
 ViktoLearn demonstrates an end-to-end DevOps delivery platform built around a FastAPI application with PostgreSQL and Redis.
