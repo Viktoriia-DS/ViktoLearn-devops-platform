@@ -39,6 +39,7 @@ spec:
               chown -R 999:999 /var/run/postgresql
               chmod 775 /var/run/postgresql
           securityContext:
+            runAsNonRoot: false
             runAsUser: 0
             runAsGroup: 0
             allowPrivilegeEscalation: false
@@ -49,6 +50,15 @@ spec:
               add:
                 - CHOWN
                 - FOWNER
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "16Mi"
+              ephemeral-storage: "10Mi"
+            limits:
+              cpu: "50m"
+              memory: "64Mi"
+              ephemeral-storage: "50Mi"
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
