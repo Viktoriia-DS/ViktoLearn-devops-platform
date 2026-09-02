@@ -1,6 +1,6 @@
 # ViktoLearn DevOps Platform
 
-ViktoLearn is an end-to-end DevOps capstone project built around a FastAPI learning platform.
+ViktoLearn is an end-to-end DevOps platform built around a FastAPI learning application.
 
 The project demonstrates the lifecycle of a containerized application: local development, automated testing, containerization, CI/CD, Kubernetes deployment, Helm packaging, GitOps delivery with Argo CD, security hardening, observability, centralized logging, alerting, and incident-response practices.
 
@@ -43,8 +43,9 @@ Kubernetes (Kind)
     |
     +--> Prometheus / Grafana
     +--> Loki / Grafana Alloy
+```
 
-## Portfolio Highlights
+## Engineering Highlights
 
 ViktoLearn demonstrates an end-to-end DevOps delivery platform built around a FastAPI application with PostgreSQL and Redis.
 
@@ -438,7 +439,7 @@ Kubernetes deployment failures were also simulated to practice diagnosis and rec
 
 ## Local-First Design
 
-ViktoLearn is a portfolio DevOps platform rather than a production SaaS deployment.
+ViktoLearn is designed as a local-first DevOps environment rather than a production SaaS deployment.
 
 The infrastructure is intentionally local-first so the project can demonstrate Kubernetes and DevOps practices without requiring paid cloud infrastructure.
 
@@ -453,9 +454,3 @@ The architecture can be mapped to managed cloud services:
 | GHCR | Managed container registry |
 | Argo CD | GitOps on managed Kubernetes |
 | Prometheus / Grafana | Managed or self-hosted observability |
-
-## Project Status
-
-The implementation, containerization, CI/CD, Kubernetes, Helm, GitOps, observability, security, and incident-response phases are complete.
-
-The technical implementation and portfolio documentation are complete. Remaining portfolio work focuses on the project demo video, CV presentation, and interview preparation.
