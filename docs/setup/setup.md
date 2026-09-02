@@ -66,7 +66,7 @@ Useful endpoints:
 - `http://localhost:8000/metrics`
 - `http://localhost:8000/docs`
 - `http://localhost:8000/redoc`
-- `http://localhost:8000/demo`
+- `http://localhost:8000/cache/demo`
 
 Stop the environment:
 
