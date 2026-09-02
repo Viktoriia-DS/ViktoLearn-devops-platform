@@ -27,3 +27,18 @@ spec:
           annotations:
             summary: "ViktoLearn API has a high error rate"
             description: "The ViktoLearn API error rate has been above 0.1 errors per second for more than 2 minutes."
+
+        - alert: ViktoLearnHighLatency
+          expr: |
+            histogram_quantile(
+              0.95,
+              sum by (le, path) (
+                rate(viktolearn_http_request_duration_seconds_bucket[5m])
+              )
+            ) > 1
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "ViktoLearn API latency is high"
+            description: "The ViktoLearn API p95 request latency has been above 1 second for more than 2 minutes."
