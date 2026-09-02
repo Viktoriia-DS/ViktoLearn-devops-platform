@@ -63,6 +63,11 @@ jobs:
       - name: Lint Helm chart
         run: helm lint helm/viktolearn
 
+      - name: Validate rendered Kubernetes manifests
+        run: |
+          helm template viktolearn helm/viktolearn > /tmp/viktolearn-rendered.yaml
+          python scripts/validate-kubernetes.py /tmp/viktolearn-rendered.yaml
+
       - name: Lint Kubernetes manifests with kube-linter
         uses: stackrox/kube-linter-action@v1.0.4
         with:
