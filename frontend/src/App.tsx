@@ -95,6 +95,18 @@ function App() {
     }
   }
 
+  function navigateToSection(sectionId: string) {
+    setSelectedCourse(null)
+    setView('home')
+
+    window.setTimeout(() => {
+      document.getElementById(sectionId)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }, 0)
+  }
+
   async function openDashboard() {
     setSelectedCourse(null)
     setView('dashboard')
@@ -177,9 +189,33 @@ function App() {
         </a>
 
         <nav>
-          <a href="#courses">Courses</a>
-          <a href="#platform">Platform</a>
-          <a href="#architecture">Architecture</a>
+          <a
+            href="#courses"
+            onClick={(event) => {
+              event.preventDefault()
+              navigateToSection('courses')
+            }}
+          >
+            Courses
+          </a>
+          <a
+            href="#platform"
+            onClick={(event) => {
+              event.preventDefault()
+              navigateToSection('platform')
+            }}
+          >
+            Platform
+          </a>
+          <a
+            href="#architecture"
+            onClick={(event) => {
+              event.preventDefault()
+              navigateToSection('architecture')
+            }}
+          >
+            Architecture
+          </a>
         </nav>
 
         <div className="nav-actions">
