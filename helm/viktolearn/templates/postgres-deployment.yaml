@@ -4,6 +4,9 @@ kind: Deployment
 metadata:
   name: postgres
   namespace: {{ .Values.namespace.name }}
+  annotations:
+    ignore-check.kube-linter.io/run-as-non-root: >-
+      postgres-volume-permissions requires root only during PVC initialization
 
 spec:
   replicas: {{ .Values.postgres.replicaCount }}
