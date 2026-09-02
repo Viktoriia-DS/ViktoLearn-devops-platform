@@ -7,7 +7,7 @@ api:
 
   image:
     repository: ghcr.io/viktoriia-ds/viktolearn-devops-platform
-    tag: "fdc8759dad464d38af357adb885e79956acd0710"
+    tag: "69a6393fd3034e2945aedcfc1f9d31c7ebd9d630"
     pullPolicy: Always
 
   service:
