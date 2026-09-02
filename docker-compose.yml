@@ -2,11 +2,11 @@ services:
   api:
     build: .
     container_name: viktolearn-api
-    
+
     env_file:
       - .env
 
-    environment: 
+    environment:
       DB_HOST: postgres
       REDIS_HOST: redis
 
@@ -19,6 +19,17 @@ services:
     ports:
       - "8000:8000"
 
+  frontend:
+    build:
+      context: ./frontend
+    container_name: viktolearn-frontend
+
+    depends_on:
+      - api
+
+    ports:
+      - "8080:8080"
+
   postgres:
     image: postgres:17
     container_name: viktolearn-postgres
@@ -30,13 +41,13 @@ services:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-    
+
     ports:
       - "5432:5432"
-    
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    
+
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
@@ -49,7 +60,7 @@ services:
 
     ports:
       - "6379:6379"
-    
+
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
