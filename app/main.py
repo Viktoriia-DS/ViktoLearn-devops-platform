@@ -1,7 +1,8 @@
+import os
+
 from fastapi import FastAPI
 
 from app.monitoring import PrometheusMiddleware
-from app.routes import cache
 from app.routes.admin import router as admin_router
 from app.routes.courses import router as courses_router
 from app.routes.enrollments import router as enrollments_router
@@ -25,7 +26,10 @@ app.include_router(enrollments_router)
 app.include_router(progress_router)
 app.include_router(admin_router)
 app.include_router(metrics_router)
-app.include_router(cache.router)
+if os.getenv("ENABLE_REDIS", "true").lower() == "true":
+    from app.routes import cache
+
+    app.include_router(cache.router)
 
 
 @app.get("/")
