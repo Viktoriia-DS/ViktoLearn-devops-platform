@@ -76,6 +76,23 @@ jobs:
             --exit-code 1 \
             viktolearn:latest
 
+      - name: Lint frontend Dockerfile with Hadolint
+        run: docker run --rm -i hadolint/hadolint < frontend/Dockerfile
+
+      - name: Build frontend Docker image
+        run: docker build -t viktolearn-frontend:latest ./frontend
+
+      - name: Scan frontend Docker image with Trivy
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:latest image \
+            --scanners vuln \
+            --severity HIGH,CRITICAL \
+            --ignore-unfixed \
+            --exit-code 1 \
+            viktolearn-frontend:latest
+
       - name: Set up Helm
         uses: azure/setup-helm@v4
 
@@ -127,6 +144,15 @@ jobs:
           docker tag viktolearn:latest \
             ghcr.io/viktoriia-ds/viktolearn-devops-platform:latest
 
+      - name: Tag frontend Docker image
+        if: github.event_name == 'push'
+        run: |
+          docker tag viktolearn-frontend:latest \
+            ghcr.io/viktoriia-ds/viktolearn-devops-platform-frontend:${{ github.sha }}
+
+          docker tag viktolearn-frontend:latest \
+            ghcr.io/viktoriia-ds/viktolearn-devops-platform-frontend:latest
+
       - name: Push Docker image to GHCR
         if: github.event_name == 'push'
         run: |
@@ -136,12 +162,21 @@ jobs:
           docker push \
             ghcr.io/viktoriia-ds/viktolearn-devops-platform:latest
 
-      - name: Update Helm image tag
+      - name: Push frontend Docker image to GHCR
+        if: github.event_name == 'push'
+        run: |
+          docker push \
+            ghcr.io/viktoriia-ds/viktolearn-devops-platform-frontend:${{ github.sha }}
+
+          docker push \
+            ghcr.io/viktoriia-ds/viktolearn-devops-platform-frontend:latest
+
+      - name: Update Helm image tags
         if: github.event_name == 'push'
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          python3 - <<'PY'
+          python3 - <<'PYTHON'
           from pathlib import Path
           import os
           import re
@@ -150,33 +185,39 @@ jobs:
           s = p.read_text()
           image_tag = os.environ["IMAGE_TAG"]
 
-          pattern = (
-              r'(repository:\s*'
-              r'ghcr\.io/viktoriia-ds/viktolearn-devops-platform\s*\n'
-              r'\s*tag:\s*)"[^"]+"'
-          )
+          repositories = [
+              "ghcr.io/viktoriia-ds/viktolearn-devops-platform",
+              "ghcr.io/viktoriia-ds/viktolearn-devops-platform-frontend",
+          ]
 
-          updated, count = re.subn(
-              pattern,
-              rf'\1"{image_tag}"',
-              s,
-              count=1,
-          )
-
-          if count != 1:
-              raise SystemExit(
-                  "ERROR: Could not update the API GHCR image tag."
+          for repository in repositories:
+              pattern = (
+                  r'(repository:\s*'
+                  + re.escape(repository)
+                  + r'\s*\n\s*tag:\s*)"[^"]+"'
               )
 
-          p.write_text(updated)
-          print(f"Helm image tag updated to {image_tag}")
-          PY
+              s, count = re.subn(
+                  pattern,
+                  rf'\1"{image_tag}"',
+                  s,
+                  count=1,
+              )
 
-      - name: Commit Helm image tag
+              if count != 1:
+                  raise SystemExit(
+                      f"ERROR: Could not update image tag for {repository}"
+                  )
+
+          p.write_text(s)
+          print(f"Helm API and frontend image tags updated to {image_tag}")
+          PYTHON
+
+      - name: Commit Helm image tags
         if: github.event_name == 'push'
         run: |
           if git diff --quiet -- helm/viktolearn/values.yaml; then
-            echo "Helm image tag already points to ${{ github.sha }}"
+            echo "Helm image tags already point to ${{ github.sha }}"
             exit 0
           fi
 
@@ -186,5 +227,5 @@ jobs:
           git add helm/viktolearn/values.yaml
           git diff --cached --check
 
-          git commit -m "Deploy image ${{ github.sha }} [skip ci]"
+          git commit -m "Deploy images ${{ github.sha }} [skip ci]"
           git push

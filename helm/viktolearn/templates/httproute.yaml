@@ -13,11 +13,29 @@ spec:
     - viktolearn.local
 
   rules:
+    # API traffic: /api/courses -> /courses
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api
+
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+
+      backendRefs:
+        - name: api
+          port: {{ .Values.api.service.port }}
+
+    # All other traffic -> React frontend
     - matches:
         - path:
             type: PathPrefix
             value: /
 
       backendRefs:
-        - name: api
-          port: {{ .Values.api.service.port }}
+        - name: frontend
+          port: {{ .Values.frontend.service.port }}
