@@ -37,6 +37,12 @@ type AdminData = {
 
 type View = 'home' | 'dashboard' | 'admin'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
+
+function apiUrl(path: string) {
+  return `${API_BASE_URL}${path}`
+}
+
 function App() {
   const [courses, setCourses] = useState<Course[]>([])
   const [coursesLoading, setCoursesLoading] = useState(true)
@@ -57,7 +63,7 @@ function App() {
     setCourseLoading(true)
 
     try {
-      const response = await fetch(`/api/courses/${courseId}`)
+      const response = await fetch(apiUrl(`/courses/${courseId}`))
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`)
@@ -79,7 +85,7 @@ function App() {
     setAdminError('')
 
     try {
-      const response = await fetch('/api/admin/dashboard')
+      const response = await fetch(apiUrl('/admin/dashboard'))
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`)
@@ -116,9 +122,9 @@ function App() {
     try {
       const [studentsResponse, enrollmentsResponse, progressResponse] =
         await Promise.all([
-          fetch('/api/students'),
-          fetch('/api/enrollments'),
-          fetch('/api/progress'),
+          fetch(apiUrl('/students')),
+          fetch(apiUrl('/enrollments')),
+          fetch(apiUrl('/progress')),
         ])
 
       if (
@@ -151,7 +157,7 @@ function App() {
   useEffect(() => {
     async function loadCourses() {
       try {
-        const response = await fetch('/api/courses')
+        const response = await fetch(apiUrl('/courses'))
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`)
