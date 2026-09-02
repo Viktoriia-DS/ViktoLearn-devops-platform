@@ -1,6 +1,7 @@
 import os
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.monitoring import PrometheusMiddleware
 from app.routes.admin import router as admin_router
@@ -18,6 +19,21 @@ app = FastAPI(
 )
 
 app.add_middleware(PrometheusMiddleware)
+
+cors_origins = [
+    origin.strip()
+    for origin in os.getenv("CORS_ORIGINS", "").split(",")
+    if origin.strip()
+]
+
+if cors_origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=cors_origins,
+        allow_credentials=False,
+        allow_methods=["GET"],
+        allow_headers=["*"],
+    )
 
 app.include_router(health_router)
 app.include_router(courses_router)
