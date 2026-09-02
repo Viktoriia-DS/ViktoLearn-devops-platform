@@ -15,6 +15,7 @@ RUN npm run build
 # ---------- Runtime ----------
 FROM nginxinc/nginx-unprivileged:alpine AS runtime
 
+# hadolint ignore=DL3066
 USER root
 RUN apk add --no-cache libexpat=2.8.4-r0
 USER 101
