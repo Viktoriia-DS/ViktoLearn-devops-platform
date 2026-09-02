@@ -75,6 +75,8 @@ postgres:
     runAsUser: 999
     runAsGroup: 999
     fsGroup: 999
+    seccompProfile:
+      type: RuntimeDefault
 
   securityContext:
     allowPrivilegeEscalation: false
@@ -110,6 +112,8 @@ redis:
     runAsUser: 999
     runAsGroup: 1000
     fsGroup: 1000
+    seccompProfile:
+      type: RuntimeDefault
 
   securityContext:
     allowPrivilegeEscalation: false

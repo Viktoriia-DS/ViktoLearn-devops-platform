@@ -23,6 +23,8 @@ spec:
         runAsUser: {{ .Values.postgres.podSecurityContext.runAsUser }}
         runAsGroup: {{ .Values.postgres.podSecurityContext.runAsGroup }}
         fsGroup: {{ .Values.postgres.podSecurityContext.fsGroup }}
+        seccompProfile:
+          type: {{ .Values.postgres.podSecurityContext.seccompProfile.type }}}}
 
       containers:
         - name: postgres

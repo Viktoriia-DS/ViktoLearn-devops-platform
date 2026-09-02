@@ -23,6 +23,8 @@ spec:
         runAsUser: {{ .Values.redis.podSecurityContext.runAsUser }}
         runAsGroup: {{ .Values.redis.podSecurityContext.runAsGroup }}
         fsGroup: {{ .Values.redis.podSecurityContext.fsGroup }}
+        seccompProfile:
+          type: {{ .Values.redis.podSecurityContext.seccompProfile.type }}}}
 
       containers:
         - name: redis
