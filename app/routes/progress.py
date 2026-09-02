@@ -14,7 +14,7 @@ progress_records = [
         "student_id": 1,
         "course_id": 2,
         "progress_percent": 30,
-        "status": "in_progrss",
+        "status": "in_progress",
     },
     {
         "id": 3,
