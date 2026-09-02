@@ -44,6 +44,82 @@ Kubernetes (Kind)
     +--> Prometheus / Grafana
     +--> Loki / Grafana Alloy
 
+## Portfolio Highlights
+
+ViktoLearn demonstrates an end-to-end DevOps delivery platform built around a FastAPI application with PostgreSQL and Redis.
+
+The project covers:
+
+- automated CI/CD with GitHub Actions
+- container build and security scanning
+- Kubernetes deployment with Helm
+- GitOps reconciliation with Argo CD
+- Gateway API routing with Envoy Gateway and MetalLB
+- container and Kubernetes security hardening
+- Prometheus metrics and alerting
+- Grafana monitoring dashboards
+- centralized logging with Grafana Alloy and Loki
+- incident simulation, runbooks, and postmortems
+- documented AWS and GCP deployment evolution
+
+### Application API
+
+![ViktoLearn FastAPI Swagger UI](docs/screenshots/01-api-swagger.png)
+
+### CI/CD Pipeline
+
+The pipeline performs Python quality checks, automated tests, Dockerfile linting, container security scanning, Helm validation, Kubernetes validation, image publishing to GHCR, and GitOps image-tag updates.
+
+![GitHub Actions CI/CD pipeline](docs/screenshots/02-github-actions.png)
+
+[Detailed CI/CD documentation](docs/ci-cd.md)
+
+### Kubernetes and GitOps
+
+Argo CD continuously reconciles the Helm-defined desired state. Automated synchronization uses pruning and self-healing.
+
+![Argo CD GitOps deployment](docs/screenshots/03-argocd.png)
+
+The local Kubernetes platform runs FastAPI, PostgreSQL, and Redis and exposes the application through Gateway API.
+
+![Kubernetes workloads and Gateway API](docs/screenshots/06-kubernetes-gateway.png)
+
+[Detailed Kubernetes documentation](docs/kubernetes.md)
+
+### Monitoring
+
+Prometheus collects application and Kubernetes metrics. Grafana provides dashboards for traffic, latency, CPU, memory, pod restarts, and replica availability.
+
+![ViktoLearn Grafana monitoring](docs/screenshots/04-grafana-monitoring.png)
+
+### Centralized Logging
+
+Grafana Alloy collects Kubernetes logs and forwards them to Loki. The logging dashboard separates application traffic from HTTP error logs.
+
+![ViktoLearn centralized logs](docs/screenshots/05-grafana-logs.png)
+
+[Monitoring and logging documentation](docs/monitoring-logging.md)
+
+### Incident Response
+
+Controlled incidents include PostgreSQL and Redis outages, CrashLoopBackOff, invalid images, missing configuration, broken endpoints, and elevated API latency.
+
+- [Incident-response overview](docs/incident-response.md)
+- [Operational runbook](docs/runbooks/incident-response.md)
+- [Slow-API postmortem](docs/postmortems/slow-api.md)
+
+### Project Documentation
+
+- [Architecture and delivery flow](docs/architecture/architecture.md)
+- [Setup guide](docs/setup/setup.md)
+- [CI/CD pipeline](docs/ci-cd.md)
+- [Kubernetes architecture](docs/kubernetes.md)
+- [Monitoring and logging](docs/monitoring-logging.md)
+- [Incident response](docs/incident-response.md)
+- [AWS and GCP deployment model](docs/cloud-deployment.md)
+
+---
+
 ## Local Development
 
 Create and activate a virtual environment:
@@ -382,4 +458,4 @@ The architecture can be mapped to managed cloud services:
 
 The implementation, containerization, CI/CD, Kubernetes, Helm, GitOps, observability, security, and incident-response phases are complete.
 
-Current work focuses on final portfolio documentation, architecture presentation, demonstration material, CV preparation, and interview preparation.
+The technical implementation and portfolio documentation are complete. Remaining portfolio work focuses on the project demo video, CV presentation, and interview preparation.
