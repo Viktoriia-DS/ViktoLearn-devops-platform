@@ -133,6 +133,10 @@ function App() {
   }
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [view, selectedCourse])
+
+  useEffect(() => {
     async function loadCourses() {
       try {
         const response = await fetch('/api/courses')
@@ -157,25 +161,34 @@ function App() {
   return (
     <div className="app">
       <header className="navbar">
-        <a className="brand" href="#">
+        <a
+          className="brand"
+          href="#"
+          onClick={() => {
+            setSelectedCourse(null)
+            setView('home')
+          }}
+        >
           <span className="brand-mark">V</span>
-          <span>ViktoLearn</span>
+          <span className="brand-copy">
+            <strong>ViktoLearn</strong>
+            <small>Engineering Platform</small>
+          </span>
         </a>
 
         <nav>
           <a href="#courses">Courses</a>
           <a href="#platform">Platform</a>
-          <a href="#about">About</a>
+          <a href="#architecture">Architecture</a>
         </nav>
 
         <div className="nav-actions">
           <button className="login-button" onClick={openDashboard}>
-            Dashboard
+            Student
           </button>
-          <button className="login-button" onClick={openAdmin}>
-            Admin
+          <button className="primary-button nav-admin" onClick={openAdmin}>
+            Admin Dashboard
           </button>
-          <button className="primary-button">Get started</button>
         </div>
       </header>
 
@@ -210,7 +223,7 @@ function App() {
             {!adminLoading && !adminError && adminData && (
               <>
                 <div className="admin-status">
-                  <div>
+                  <div className="admin-status-primary">
                     <span className="status-indicator" />
                     <div>
                       <span>Platform status</span>
@@ -218,79 +231,141 @@ function App() {
                     </div>
                   </div>
 
-                  <span>ViktoLearn API</span>
+                  <div className="admin-status-meta">
+                    <span>ViktoLearn API</span>
+                    <strong>Service healthy</strong>
+                  </div>
                 </div>
 
                 <div className="admin-metrics">
                   <article>
-                    <span>Total courses</span>
+                    <div className="metric-header">
+                      <span>Total courses</span>
+                      <small>01</small>
+                    </div>
                     <strong>{adminData.total_courses}</strong>
                     <p>Courses available on the learning platform.</p>
                   </article>
 
                   <article>
-                    <span>Total students</span>
+                    <div className="metric-header">
+                      <span>Total students</span>
+                      <small>02</small>
+                    </div>
                     <strong>{adminData.total_students}</strong>
                     <p>Students currently registered with ViktoLearn.</p>
                   </article>
 
                   <article>
-                    <span>Total enrollments</span>
+                    <div className="metric-header">
+                      <span>Total enrollments</span>
+                      <small>03</small>
+                    </div>
                     <strong>{adminData.total_enrollments}</strong>
                     <p>Active course enrollment records.</p>
                   </article>
 
                   <article>
-                    <span>Completed courses</span>
+                    <div className="metric-header">
+                      <span>Completed courses</span>
+                      <small>04</small>
+                    </div>
                     <strong>{adminData.completed_courses}</strong>
                     <p>Course completions recorded by the platform.</p>
                   </article>
                 </div>
 
-                <div className="admin-summary">
-                  <div>
-                    <span className="eyebrow">PLATFORM ACTIVITY</span>
-                    <h2>Learning at a glance</h2>
+                <div className="admin-lower-grid">
+                  <div className="admin-summary">
+                    <div>
+                      <span className="eyebrow">PLATFORM ACTIVITY</span>
+                      <h2>Learning at a glance</h2>
+                    </div>
+
+                    <div className="admin-summary-grid">
+                      <div>
+                        <span>Students per course</span>
+                        <strong>
+                          {adminData.total_courses > 0
+                            ? (
+                                adminData.total_students /
+                                adminData.total_courses
+                              ).toFixed(1)
+                            : '0'}
+                        </strong>
+                      </div>
+
+                      <div>
+                        <span>Enrollments per student</span>
+                        <strong>
+                          {adminData.total_students > 0
+                            ? (
+                                adminData.total_enrollments /
+                                adminData.total_students
+                              ).toFixed(1)
+                            : '0'}
+                        </strong>
+                      </div>
+
+                      <div>
+                        <span>Completion rate</span>
+                        <strong>
+                          {adminData.total_enrollments > 0
+                            ? `${Math.round(
+                                (adminData.completed_courses /
+                                  adminData.total_enrollments) *
+                                  100,
+                              )}%`
+                            : '0%'}
+                        </strong>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="admin-summary-grid">
+                  <aside className="operations-card">
                     <div>
-                      <span>Students per course</span>
-                      <strong>
-                        {adminData.total_courses > 0
-                          ? (
-                              adminData.total_students /
-                              adminData.total_courses
-                            ).toFixed(1)
-                          : '0'}
-                      </strong>
+                      <span className="eyebrow">DELIVERY PLATFORM</span>
+                      <h2>Operational stack</h2>
                     </div>
 
-                    <div>
-                      <span>Enrollments per student</span>
-                      <strong>
-                        {adminData.total_students > 0
-                          ? (
-                              adminData.total_enrollments /
-                              adminData.total_students
-                            ).toFixed(1)
-                          : '0'}
-                      </strong>
-                    </div>
+                    <div className="operations-list">
+                      <div>
+                        <span className="runtime-dot" />
+                        <div>
+                          <strong>GitOps delivery</strong>
+                          <small>Argo CD · Helm</small>
+                        </div>
+                        <span>Managed</span>
+                      </div>
 
-                    <div>
-                      <span>Completion rate</span>
-                      <strong>
-                        {adminData.total_enrollments > 0
-                          ? `${Math.round(
-                              (adminData.completed_courses /
-                                adminData.total_enrollments) *
-                                100,
-                            )}%`
-                          : '0%'}
-                      </strong>
+                      <div>
+                        <span className="runtime-dot" />
+                        <div>
+                          <strong>Observability</strong>
+                          <small>Prometheus · Grafana · Loki</small>
+                        </div>
+                        <span>Enabled</span>
+                      </div>
+
+                      <div>
+                        <span className="runtime-dot" />
+                        <div>
+                          <strong>Container security</strong>
+                          <small>Trivy · non-root runtime</small>
+                        </div>
+                        <span>Hardened</span>
+                      </div>
+
+                      <div>
+                        <span className="runtime-dot" />
+                        <div>
+                          <strong>Traffic management</strong>
+                          <small>Envoy Gateway · Gateway API</small>
+                        </div>
+                        <span>Configured</span>
+                      </div>
                     </div>
-                  </div>
+                  </aside>
                 </div>
               </>
             )}
@@ -523,74 +598,128 @@ function App() {
           <>
         <section className="hero">
           <div className="hero-content">
-            <span className="eyebrow">LEARN. BUILD. PROGRESS.</span>
+            <div className="hero-badge">
+              <span className="live-dot" />
+              DEVOPS ENGINEERING PORTFOLIO
+            </div>
 
             <h1>
-              Build skills that
-              <span> move you forward.</span>
+              A learning platform
+              <span> engineered to run.</span>
             </h1>
 
             <p className="hero-description">
-              Practical technology courses designed to turn knowledge into
-              real-world skills. Learn at your own pace and track your progress
-              as you grow.
+              ViktoLearn is a full-stack application used to demonstrate an
+              end-to-end DevOps platform: automated CI/CD, container security,
+              Kubernetes, GitOps and production-style observability.
             </p>
 
             <div className="hero-actions">
-              <a className="primary-button large" href="#courses">
-                Explore courses
+              <a className="primary-button large" href="#platform">
+                Explore the platform
+                <span aria-hidden="true">→</span>
               </a>
-              <a className="secondary-button large" href="#platform">
-                How it works
+
+              <a className="secondary-button large" href="#architecture">
+                View architecture
               </a>
             </div>
 
-            <div className="hero-stats">
+            <div className="platform-health">
               <div>
-                <strong>3+</strong>
-                <span>Learning paths</span>
+                <span className="health-dot" />
+                <span>Platform operational</span>
               </div>
-              <div>
-                <strong>50+</strong>
-                <span>Practical lessons</span>
-              </div>
-              <div>
-                <strong>100%</strong>
-                <span>Self-paced</span>
-              </div>
+              <span className="health-divider" />
+              <span>GitOps managed</span>
+              <span className="health-divider" />
+              <span>Security scanned</span>
             </div>
           </div>
 
-          <div className="hero-panel">
+          <div className="hero-panel engineering-panel">
             <div className="panel-header">
-              <span>Your learning</span>
-              <span className="status">In progress</span>
+              <div>
+                <small>PLATFORM STATUS</small>
+                <strong>ViktoLearn</strong>
+              </div>
+
+              <span className="status operational">
+                <span className="status-dot" />
+                Operational
+              </span>
             </div>
 
-            <div className="current-course">
-              <span className="course-icon">K8s</span>
-              <div>
-                <small>CURRENT COURSE</small>
-                <h3>Docker & Kubernetes</h3>
-                <p>12 of 24 lessons completed</p>
+            <div className="deployment-flow">
+              <div className="flow-stage">
+                <span className="flow-icon">01</span>
+                <div>
+                  <small>SOURCE</small>
+                  <strong>GitHub</strong>
+                </div>
+                <span className="flow-state">✓</span>
+              </div>
+
+              <span className="flow-line" />
+
+              <div className="flow-stage">
+                <span className="flow-icon">02</span>
+                <div>
+                  <small>CI / SECURITY</small>
+                  <strong>GitHub Actions</strong>
+                </div>
+                <span className="flow-state">✓</span>
+              </div>
+
+              <span className="flow-line" />
+
+              <div className="flow-stage">
+                <span className="flow-icon">03</span>
+                <div>
+                  <small>GITOPS</small>
+                  <strong>Argo CD + Helm</strong>
+                </div>
+                <span className="flow-state">✓</span>
+              </div>
+
+              <span className="flow-line" />
+
+              <div className="flow-stage">
+                <span className="flow-icon">04</span>
+                <div>
+                  <small>RUNTIME</small>
+                  <strong>Kubernetes</strong>
+                </div>
+                <span className="flow-state">✓</span>
               </div>
             </div>
 
-            <div className="progress-track">
-              <div className="progress-value" />
-            </div>
-
-            <div className="progress-label">
-              <span>Course progress</span>
-              <strong>50%</strong>
-            </div>
-
-            <div className="next-lesson">
-              <small>UP NEXT</small>
-              <strong>Kubernetes Deployments</strong>
-              <span>Continue →</span>
+            <div className="panel-runtime">
+              <div>
+                <span className="runtime-dot" />
+                <span>Frontend</span>
+                <strong>Running</strong>
+              </div>
+              <div>
+                <span className="runtime-dot" />
+                <span>API</span>
+                <strong>Running</strong>
+              </div>
             </div>
           </div>
+        </section>
+
+        <section className="tech-strip" aria-label="Platform technologies">
+          <span>Docker</span>
+          <span>Kubernetes</span>
+          <span>Helm</span>
+          <span>Argo CD</span>
+          <span>GitHub Actions</span>
+          <span>Prometheus</span>
+          <span>Grafana</span>
+          <span>Loki</span>
+          <span>Trivy</span>
+          <span>Envoy Gateway</span>
         </section>
 
         <section className="courses-section" id="courses">
@@ -640,27 +769,191 @@ function App() {
           </div>
         </section>
 
-        <section className="platform-section" id="platform">
-          <span className="eyebrow">THE PLATFORM</span>
-          <h2>Everything you need to keep progressing.</h2>
-
-          <div className="feature-grid">
+        <section className="platform-section engineering-section" id="platform">
+          <div className="section-heading">
             <div>
-              <span className="feature-number">01</span>
-              <h3>Practical courses</h3>
-              <p>Learn through focused lessons built around useful technical skills.</p>
+              <span className="eyebrow">ENGINEERED END TO END</span>
+              <h2>
+                Platform engineering,
+                <span> not just an application.</span>
+              </h2>
             </div>
 
+            <p>
+              ViktoLearn demonstrates the complete delivery lifecycle of a
+              containerized application, from source code and automated
+              validation to GitOps deployment, observability and runtime
+              security.
+            </p>
+          </div>
+
+          <div className="engineering-grid">
+            <article className="engineering-card">
+              <div className="engineering-card-top">
+                <span className="engineering-number">01</span>
+                <span className="engineering-tag">AUTOMATED</span>
+              </div>
+
+              <h3>CI/CD</h3>
+              <strong>GitHub Actions</strong>
+
+              <p>
+                Automated quality gates validate application code,
+                containers and Kubernetes configuration before deployment.
+              </p>
+
+              <div className="pipeline-mini">
+                <span>Test</span>
+                <i>→</i>
+                <span>Lint</span>
+                <i>→</i>
+                <span>Scan</span>
+                <i>→</i>
+                <span>Build</span>
+                <i>→</i>
+                <span>Push</span>
+              </div>
+            </article>
+
+            <article className="engineering-card">
+              <div className="engineering-card-top">
+                <span className="engineering-number">02</span>
+                <span className="engineering-tag">DECLARATIVE</span>
+              </div>
+
+              <h3>GitOps</h3>
+              <strong>Argo CD + Helm</strong>
+
+              <p>
+                Immutable image tags are written back to Helm configuration
+                and automatically synchronized into Kubernetes by Argo CD.
+              </p>
+
+              <div className="card-status-row">
+                <span>
+                  <i className="runtime-dot" />
+                  Argo CD
+                </span>
+                <strong>Synced</strong>
+              </div>
+            </article>
+
+            <article className="engineering-card">
+              <div className="engineering-card-top">
+                <span className="engineering-number">03</span>
+                <span className="engineering-tag">OBSERVABLE</span>
+              </div>
+
+              <h3>Observability</h3>
+              <strong>Prometheus · Grafana · Loki · Alloy</strong>
+
+              <p>
+                Application metrics, operational dashboards and centralized
+                logs provide visibility into platform behavior.
+              </p>
+
+              <div className="observability-signals">
+                <span>Metrics</span>
+                <span>Dashboards</span>
+                <span>Logs</span>
+              </div>
+            </article>
+
+            <article className="engineering-card">
+              <div className="engineering-card-top">
+                <span className="engineering-number">04</span>
+                <span className="engineering-tag">HARDENED</span>
+              </div>
+
+              <h3>Security</h3>
+              <strong>Trivy · Hadolint · Kubernetes</strong>
+
+              <p>
+                Images are scanned in CI and workloads run with hardened
+                container security contexts and non-root identities.
+              </p>
+
+              <div className="security-checks">
+                <span>✓ Non-root</span>
+                <span>✓ Read-only root filesystem</span>
+                <span>✓ Image scanning</span>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section className="architecture-section" id="architecture">
+          <div className="section-heading architecture-heading">
             <div>
-              <span className="feature-number">02</span>
-              <h3>Track progress</h3>
-              <p>See completed lessons and continue exactly where you stopped.</p>
+              <span className="eyebrow">SYSTEM ARCHITECTURE</span>
+              <h2>
+                Designed as a
+                <span> complete delivery platform.</span>
+              </h2>
             </div>
 
-            <div>
-              <span className="feature-number">03</span>
-              <h3>Learn at your pace</h3>
-              <p>Move through each learning path according to your own schedule.</p>
+            <p>
+              Traffic enters through Envoy Gateway and is routed to the React
+              frontend or FastAPI service. Application workloads run alongside
+              PostgreSQL and Redis inside Kubernetes.
+            </p>
+          </div>
+
+          <div className="architecture-board">
+            <div className="architecture-top">
+              <span className="architecture-label">INGRESS</span>
+              <div className="architecture-node gateway-node">
+                <small>GATEWAY API</small>
+                <strong>Envoy Gateway</strong>
+                <span>HTTP routing</span>
+              </div>
+            </div>
+
+            <div className="architecture-flow-label">
+              <span>/</span>
+              <span>/api</span>
+            </div>
+
+            <div className="architecture-apps">
+              <div className="architecture-node">
+                <small>WEB</small>
+                <strong>React</strong>
+                <span>Frontend · :8080</span>
+              </div>
+
+              <div className="architecture-node api-node">
+                <small>APPLICATION</small>
+                <strong>FastAPI</strong>
+                <span>REST API · :8000</span>
+              </div>
+            </div>
+
+            <div className="architecture-api-flow">
+              <span>APPLICATION DATA</span>
+            </div>
+
+            <div className="architecture-data">
+              <div className="architecture-data-spacer" />
+
+              <div className="architecture-data-services">
+                <div className="architecture-node data-node">
+                  <small>DATABASE</small>
+                  <strong>PostgreSQL</strong>
+                </div>
+
+                <div className="architecture-node data-node">
+                  <small>CACHE</small>
+                  <strong>Redis</strong>
+                </div>
+              </div>
+            </div>
+
+            <div className="architecture-foundation">
+              <span>Kubernetes</span>
+              <span>Helm</span>
+              <span>Argo CD</span>
+              <span>Prometheus</span>
+              <span>Grafana</span>
             </div>
           </div>
         </section>
@@ -675,12 +968,28 @@ function App() {
       </main>
 
       <footer id="about">
-        <a className="brand" href="#">
-          <span className="brand-mark">V</span>
-          <span>ViktoLearn</span>
-        </a>
+        <div className="footer-identity">
+          <a className="brand" href="#">
+            <span className="brand-mark">V</span>
+            <span>
+              ViktoLearn
+              <small>DEVOPS ENGINEERING PORTFOLIO</small>
+            </span>
+          </a>
 
-        <p>Practical learning for modern technology.</p>
+          <p>
+            React · FastAPI · Docker · Kubernetes · GitOps · Observability
+          </p>
+        </div>
+
+        <a
+          className="footer-source"
+          href="https://github.com/Viktoriia-DS/ViktoLearn-devops-platform"
+          target="_blank"
+          rel="noreferrer"
+        >
+          View source on GitHub →
+        </a>
       </footer>
     </div>
   )
