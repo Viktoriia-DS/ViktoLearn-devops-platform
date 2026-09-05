@@ -55,18 +55,47 @@ The ViktoLearn application is publicly deployed on Render:
 
 The public deployment uses a Render Static Site for the React frontend and a Render Web Service for the FastAPI backend.
 
+### Public Deployment Architecture
+
+```text
+Internet
+   |
+   v
+React / TypeScript frontend
+Render Static Site
+   |
+   | HTTPS API requests
+   v
+FastAPI
+Render Web Service
+```
+
+Deployment-specific behavior is configured through environment variables:
+
+- `VITE_API_BASE_URL` selects the API endpoint used by the frontend.
+- `ENABLE_REDIS` allows Redis integration to be disabled for the lightweight public environment.
+- `CORS_ORIGINS` defines which frontend origins can call the public API.
+
 The full DevOps platform documented in this repository runs separately on a local Kubernetes (Kind) environment and demonstrates Helm-based deployment, Argo CD GitOps, Envoy Gateway routing, Prometheus/Grafana observability, Loki/Alloy centralized logging, and Kubernetes security controls.
 
 > **Note:** The public API runs on Render's free service tier and may require a short cold start after a period of inactivity.
 
 ---
 
+## Frontend
+
+The public React/TypeScript frontend provides a recruiter-accessible view of the ViktoLearn platform and its DevOps architecture.
+
+![ViktoLearn frontend](docs/screenshots/07-viktolearn-frontend.png)
+
 ## Engineering Highlights
 
-ViktoLearn demonstrates an end-to-end DevOps delivery platform built around a FastAPI application with PostgreSQL and Redis.
+ViktoLearn demonstrates an end-to-end DevOps delivery platform built around a FastAPI backend, React/TypeScript frontend, PostgreSQL, and Redis.
 
 The project covers:
 
+- React/TypeScript frontend with a FastAPI REST API
+- environment-aware configuration for local, Kubernetes, and public deployments
 - automated CI/CD with GitHub Actions
 - container build and security scanning
 - Kubernetes deployment with Helm
@@ -428,24 +457,36 @@ The repository contains an incident-response runbook and a postmortem for the si
 ```text
 .
 ├── .github/
-│   └── workflows/          # CI/CD pipeline
-├── app/                    # FastAPI application
-│   └── routes/             # API routes
-├── argocd/                 # Argo CD Application
+│   └── workflows/              # CI/CD pipeline
+├── app/                        # FastAPI backend
+│   └── routes/                 # API routes
+├── argocd/                     # Argo CD Application
 ├── docs/
-│   ├── postmortems/        # Incident postmortems
-│   └── runbooks/           # Operational runbooks
+│   ├── architecture/           # Architecture documentation
+│   ├── postmortems/            # Incident postmortems
+│   ├── runbooks/               # Operational runbooks
+│   └── screenshots/            # Portfolio evidence
+├── frontend/                   # React + TypeScript + Vite frontend
+│   ├── src/                    # Frontend application
+│   ├── Dockerfile              # Frontend container image
+│   └── nginx.conf              # Production Nginx configuration
 ├── helm/
-│   └── viktolearn/         # GitOps Helm chart
-├── k8s/                    # Kubernetes/base manifests
-├── monitoring/             # Monitoring and logging configuration
-├── scripts/                # Validation and utility scripts
-├── tests/                  # Automated tests
-├── Dockerfile
-├── docker-compose.yml
+│   └── viktolearn/             # GitOps Helm chart
+│       ├── templates/           # Kubernetes + Gateway API resources
+│       ├── values-dev.yaml
+│       ├── values-staging.yaml
+│       └── values-prod.yaml
+├── k8s/                        # Kubernetes/base manifests
+├── monitoring/                 # Prometheus, Grafana, Loki and Alloy
+├── scripts/                    # Validation and utility scripts
+├── tests/                      # Automated backend tests
+├── Dockerfile                  # FastAPI container image
+├── docker-compose.yml          # Local multi-service environment
 ├── requirements.txt
 └── requirements-prod.txt
 ```
+
+The Helm chart includes Deployments, Services, health probes, resource controls, NetworkPolicies, ResourceQuota, ServiceMonitor, PrometheusRule, GatewayClass, Gateway, and HTTPRoute resources.
 
 ## Reliability and Recovery
 
@@ -455,9 +496,9 @@ Kubernetes deployment failures were also simulated to practice diagnosis and rec
 
 ## Local-First Design
 
-ViktoLearn is designed as a local-first DevOps environment rather than a production SaaS deployment.
+ViktoLearn uses a local-first Kubernetes environment for the full DevOps platform while also providing a lightweight public deployment for portfolio access.
 
-The infrastructure is intentionally local-first so the project can demonstrate Kubernetes and DevOps practices without requiring paid cloud infrastructure.
+The Kind-based environment demonstrates Kubernetes, Helm, GitOps, networking, security, observability, and operational practices without requiring paid managed Kubernetes infrastructure. The public Render environment provides recruiter-accessible frontend and API endpoints without attempting to reproduce the entire Kubernetes platform in the cloud.
 
 The architecture can be mapped to managed cloud services:
 
